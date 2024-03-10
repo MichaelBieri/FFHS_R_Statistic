@@ -1,0 +1,16 @@
+marital status,attitude,freq
+married,dull,21
+married, routine,241
+married,exciting,251
+widowed,dull,17
+widowed, routine,54
+widowed,exciting,40
+divorced,dull,10
+divorced, routine,74
+divorced,exciting,65
+separated,dull,6
+separated,routine,11
+separated,exciting,8
+never married,dull,11
+never married, routine,79
+never married,exciting,108

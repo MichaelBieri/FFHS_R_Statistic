@@ -1,0 +1,19 @@
+---
+title: "Lernziele R Markdown"
+author: "Ivan Moser"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Lernziele
+
+-   Ich kann ein RMarkdown (oder Quarto) Dokument erstellen.
+-   Ich kenne die wichtigsten Komponenten der (R)Markdown Syntax (Überschriften, Listen, etc.).
+-   Ich kann Codeblöcke (Chunks) einfügen und ausführen.
+-   Ich kann die Eigenschaften der Codeblöcke (chunk options) anpassen.
+-   Ich kann mit RMarkdown ein html-Dokument erstellen (knitten).
+-   Optional: Ich kann RMarkdown auch in andere Formate knitten (z.B. PDF)

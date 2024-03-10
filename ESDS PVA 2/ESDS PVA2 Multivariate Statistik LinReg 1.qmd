@@ -1,0 +1,145 @@
+---
+title: "ESDS PVA 2"
+author: "Ivan Moser"
+format: html
+editor: visual
+---
+
+```{r prep}
+#| include: false
+
+# Installiere pacman, falls noch nicht vorhanden
+if (!require("pacman")) install.packages("pacman")
+
+# lade nötige packages (installiere wenn nötig)
+pacman::p_load(tidyverse, kableExtra, openintro, ggmosaic)
+
+```
+
+## PVA Bivariate Explorative Datenanalyse
+
+### Kreuztabellen
+
+```{r}
+# data source: https://www.researchgate.net/publication/320694285_Multiple_Correspondence_Analysis_and_its_applications
+
+marital_life <- read_csv("data/marital_life.csv")
+
+marital_life <- 
+marital_life %>% 
+  mutate(`marital status` = fct_relevel(`marital status`,
+                                        "married",
+                                        "widowed",
+                                        "divorced",
+                                        "separated",
+                                        "never married"
+                                        ),
+        attitude = fct_relevel(attitude,
+                               "dull",
+                               "routine",
+                               "exciting")
+  )
+
+# addmargins: https://stackoverflow.com/questions/27969616/add-column-sum-to-table
+
+# raw values
+marital_life %>% 
+  uncount(weights = freq) %>% 
+  table() %>% 
+  addmargins() %>% 
+  kableExtra::kable(digits = 2)
+
+# condition on marital status
+marital_life %>% 
+  uncount(weights = freq) %>% 
+  table() %>% 
+  prop.table(margin = 1) %>%
+  addmargins(2) %>% 
+  kableExtra::kable(digits = 2)
+
+
+# condition on attitude
+marital_life %>% 
+  uncount(weights = freq) %>% 
+  table() %>% 
+  prop.table(margin = 2) %>%
+  addmargins(1) %>% 
+  kableExtra::kable(digits = 2)
+
+ 
+
+```
+
+### Bar plots
+
+```{r}
+# stacked barplot
+marital_life %>% 
+  ggplot(aes(x=`marital status`,
+             y=freq, fill = fct_rev(attitude))) +
+  geom_col() +
+  scale_fill_brewer(type = "qual", palette = 1) +
+  labs(x="Marital Status", y="Frequency", fill="Attitude towards life") +
+  theme_light() +
+  theme(text = element_text(size = 14),
+        axis.text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
+        axis.title.x = element_text(vjust = -0.75),
+        axis.title.y = element_text(vjust = 3),
+        legend.text = element_text(size = 14))
+
+ggsave("Abbildungen/marital_stacked_bar.png") 
+```
+
+```{r}
+# standardized stacked barplot
+marital_life %>% 
+  ggplot(aes(x=`marital status`,
+             y=freq, fill = fct_rev(attitude))) +
+  geom_col(position = "fill") +
+    scale_fill_brewer(type = "qual", palette = 1) +
+  theme_light() +
+    labs(x="Marital Status", y="Proportion", fill="Attitude towards life") +
+  theme(text = element_text(size = 14),
+        axis.text = element_text(size = 14),
+        axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
+        axis.title.x = element_text(vjust = -0.75),
+        axis.title.y = element_text(vjust = 3),
+        legend.text = element_text(size = 14))
+
+ggsave("Abbildungen/marital_stand_stacked_bar.png") 
+```
+
+```{r}
+# side-by-side
+# stacked barplot
+marital_life %>% 
+  ggplot(aes(x=`marital status`,
+             y=freq, fill = attitude)) +
+  geom_col(position = position_dodge()) +
+    scale_fill_brewer(type = "qual", palette = 1) +
+  theme_light()
+
+ggsave("Abbildungen/marital_stand_side_by_side_bar.png") 
+```
+
+### Mosaikplot
+
+```{r}
+
+flights <- fly  %>%
+  filter(!is.na(do_you_recline), !is.na(rude_to_recline))
+
+ggplot(data = flights) +
+  geom_mosaic(aes(x = product(do_you_recline, rude_to_recline), fill = do_you_recline)) +   
+  labs(y="Do you recline?", x="Is it rude to recline?") +
+  scale_fill_brewer(type = "qual") +
+  #theme_minimal() +
+  theme_mosaic() +
+  theme(legend.position = "none",
+    axis.title.y = element_text(vjust = +3),
+    axis.title.x = element_text(vjust = -0.75))
+
+ggsave("Abbildungen/fly_mosaic_plot.png") 
+
+```
